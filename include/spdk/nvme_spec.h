@@ -729,6 +729,7 @@ enum spdk_nvme_admin_opcode {
  * NVM command set opcodes
  */
 enum spdk_nvme_nvm_opcode {
+    SPDK_NVME_OPC_FS_OPEN           = 0xff,
 	SPDK_NVME_OPC_FLUSH				= 0x00,
 	SPDK_NVME_OPC_WRITE				= 0x01,
 	SPDK_NVME_OPC_READ				= 0x02,

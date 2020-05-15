@@ -2610,6 +2610,13 @@ int spdk_nvme_cuse_register(struct spdk_nvme_ctrlr *ctrlr, const char *dev_path)
  */
 void spdk_nvme_cuse_unregister(struct spdk_nvme_ctrlr *ctrlr);
 
+/**
+ * yesa: Submit NVMe FS command to open file
+ */
+int spdk_nvme_ns_cmd_fs_open(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *payload,
+                             uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
+                             void *cb_arg, uint32_t io_flags);
+
 #ifdef __cplusplus
 }
 #endif
