@@ -1012,3 +1012,53 @@ spdk_nvme_ns_cmd_fs_open(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair,
         return -ENOMEM;
     }
 }
+
+int
+spdk_nvme_ns_cmd_fs_read(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+                         uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
+                         void *cb_arg, uint32_t io_flags)
+{
+    struct nvme_request *req;
+    struct nvme_payload payload;
+
+    payload = NVME_PAYLOAD_CONTIG(buffer, NULL);
+
+    req = _nvme_ns_cmd_rw(ns, qpair, &payload, 0, 0, lba, lba_count, cb_fn, cb_arg, SPDK_NVME_OPC_FS_READ,
+                          io_flags, 0,
+                          0, true);
+    if (req != NULL) {
+        return nvme_qpair_submit_request(qpair, req);
+    } else if (spdk_nvme_ns_check_request_length(lba_count,
+                                                 ns->sectors_per_max_io,
+                                                 ns->sectors_per_stripe,
+                                                 qpair->ctrlr->opts.io_queue_requests)) {
+        return -EINVAL;
+    } else {
+        return -ENOMEM;
+    }
+}
+
+int
+spdk_nvme_ns_cmd_fs_write(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+                          uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
+                          void *cb_arg, uint32_t io_flags)
+{
+    struct nvme_request *req;
+    struct nvme_payload payload;
+
+    payload = NVME_PAYLOAD_CONTIG(buffer, NULL);
+
+    req = _nvme_ns_cmd_rw(ns, qpair, &payload, 0, 0, lba, lba_count, cb_fn, cb_arg, SPDK_NVME_OPC_FS_WRITE,
+                          io_flags, 0,
+                          0, true);
+    if (req != NULL) {
+        return nvme_qpair_submit_request(qpair, req);
+    } else if (spdk_nvme_ns_check_request_length(lba_count,
+                                                 ns->sectors_per_max_io,
+                                                 ns->sectors_per_stripe,
+                                                 qpair->ctrlr->opts.io_queue_requests)) {
+        return -EINVAL;
+    } else {
+        return -ENOMEM;
+    }
+}
