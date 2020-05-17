@@ -1306,6 +1306,7 @@ static void
 nvme_pcie_qpair_complete_tracker(struct spdk_nvme_qpair *qpair, struct nvme_tracker *tr,
 				 struct spdk_nvme_cpl *cpl, bool print_on_error)
 {
+    printf("YESA LOG: %s, %s\n", __FILE__, __func__);
 	struct nvme_pcie_qpair		*pqpair = nvme_pcie_qpair(qpair);
 	struct nvme_request		*req;
 	bool				retry, error;
@@ -1320,6 +1321,7 @@ nvme_pcie_qpair_complete_tracker(struct spdk_nvme_qpair *qpair, struct nvme_trac
 		req->retries < pqpair->retry_count;
 
 	if (error && print_on_error && !qpair->ctrlr->opts.disable_error_logging) {
+        printf("YESA LOG: %s, %s, 1\n", __FILE__, __func__);
 		spdk_nvme_qpair_print_command(qpair, &req->cmd);
 		spdk_nvme_qpair_print_completion(qpair, cpl);
 	}
@@ -1327,18 +1329,23 @@ nvme_pcie_qpair_complete_tracker(struct spdk_nvme_qpair *qpair, struct nvme_trac
 	assert(cpl->cid == req->cmd.cid);
 
 	if (retry) {
+        printf("YESA LOG: %s, %s, 2\n", __FILE__, __func__);
 		req->retries++;
 		nvme_pcie_qpair_submit_tracker(qpair, tr);
 	} else {
+        printf("YESA LOG: %s, %s, 3\n", __FILE__, __func__);
 		/* Only check admin requests from different processes. */
 		if (nvme_qpair_is_admin_queue(qpair) && req->pid != getpid()) {
+            printf("YESA LOG: %s, %s, 3.1\n", __FILE__, __func__);
 			req_from_current_proc = false;
 			nvme_pcie_qpair_insert_pending_admin_request(qpair, req, cpl);
 		} else {
+            printf("YESA LOG: %s, %s, 3.2\n", __FILE__, __func__);
 			nvme_complete_request(tr->cb_fn, tr->cb_arg, qpair, req, cpl);
 		}
 
 		if (req_from_current_proc == true) {
+            printf("YESA LOG: %s, %s, 3.3\n", __FILE__, __func__);
 			nvme_qpair_free_request(qpair, req);
 		}
 
