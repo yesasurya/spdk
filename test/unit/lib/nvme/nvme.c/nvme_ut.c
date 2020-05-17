@@ -1167,7 +1167,6 @@ uint64_t completion_delay, timeout_in_secs;
 int
 spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
-    printf("YESA LOG: %s, %s, 3\n", __FILE__, __func__);
 	spdk_delay_us(completion_delay * spdk_get_ticks_hz());
 
 	g_status.done = completion_delay < timeout_in_secs ? true : false;

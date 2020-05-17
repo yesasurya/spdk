@@ -2067,6 +2067,7 @@ nvme_pcie_qpair_check_timeout(struct spdk_nvme_qpair *qpair)
 int32_t
 nvme_pcie_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
+    printf("YESA LOG: %s, %s\n", __FILE__, __func__);
 	struct nvme_pcie_qpair	*pqpair = nvme_pcie_qpair(qpair);
 	struct nvme_tracker	*tr;
 	struct spdk_nvme_cpl	*cpl, *next_cpl;

@@ -436,14 +436,12 @@ nvme_qpair_check_enabled(struct spdk_nvme_qpair *qpair)
 int32_t
 spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
-    printf("YESA LOG: %s, %s, 2\n", __FILE__, __func__);
 	int32_t ret;
 	int32_t resubmit_rc;
 	int32_t i;
 	struct nvme_request *req, *tmp;
 
 	if (spdk_unlikely(qpair->ctrlr->is_failed)) {
-        printf("YESA LOG: %s, %s, 2.1\n", __FILE__, __func__);
 		if (qpair->ctrlr->is_removed) {
 			nvme_qpair_abort_reqs(qpair, 1 /* Do not retry */);
 		}
@@ -451,13 +449,11 @@ spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 	}
 
 	if (spdk_unlikely(qpair->transport_qp_is_failed == true)) {
-        printf("YESA LOG: %s, %s, 2.2\n", __FILE__, __func__);
 		return -ENXIO;
 	}
 
 	if (spdk_unlikely(!nvme_qpair_check_enabled(qpair) &&
 			  !nvme_qpair_state_equals(qpair, NVME_QPAIR_CONNECTING))) {
-        printf("YESA LOG: %s, %s, 2.3\n", __FILE__, __func__);
 		/*
 		 * qpair is not enabled, likely because a controller reset is
 		 *  in progress.
@@ -467,7 +463,6 @@ spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 
 	/* error injection for those queued error requests */
 	if (spdk_unlikely(!STAILQ_EMPTY(&qpair->err_req_head))) {
-        printf("YESA LOG: %s, %s, 2.4\n", __FILE__, __func__);
 		STAILQ_FOREACH_SAFE(req, &qpair->err_req_head, stailq, tmp) {
 			if (spdk_get_ticks() - req->submit_tick > req->timeout_tsc) {
 				STAILQ_REMOVE(&qpair->err_req_head, req, nvme_request, stailq);
@@ -481,7 +476,6 @@ spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 	qpair->in_completion_context = 1;
 	ret = nvme_transport_qpair_process_completions(qpair, max_completions);
 	if (ret < 0) {
-        printf("YESA LOG: %s, %s, 2.5\n", __FILE__, __func__);
 		SPDK_ERRLOG("CQ error, abort requests after transport retry counter exceeded\n");
 		if (nvme_qpair_is_admin_queue(qpair)) {
 			nvme_ctrlr_fail(qpair->ctrlr, false);
@@ -489,7 +483,6 @@ spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 	}
 	qpair->in_completion_context = 0;
 	if (qpair->delete_after_completion_context) {
-        printf("YESA LOG: %s, %s, 2.6\n", __FILE__, __func__);
 		/*
 		 * A request to delete this qpair was made in the context of this completion
 		 *  routine - so it is safe to delete it now.
@@ -504,8 +497,7 @@ spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 	 */
 	i = 0;
 	while (i < ret && !STAILQ_EMPTY(&qpair->queued_req) && !qpair->ctrlr->is_resetting) {
-        printf("YESA LOG: %s, %s, 2.7\n", __FILE__, __func__);
-		req = STAILQ_FIRST(&qpair->queued_req);
+        req = STAILQ_FIRST(&qpair->queued_req);
 		STAILQ_REMOVE_HEAD(&qpair->queued_req, stailq);
 		resubmit_rc = nvme_qpair_resubmit_request(qpair, req);
 		if (spdk_unlikely(resubmit_rc != 0)) {

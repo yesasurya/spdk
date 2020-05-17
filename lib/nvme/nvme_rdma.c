@@ -1823,6 +1823,7 @@ int
 nvme_rdma_qpair_process_completions(struct spdk_nvme_qpair *qpair,
 				    uint32_t max_completions)
 {
+    printf("YESA LOG: %s, %s\n", __FILE__, __func__);
 	struct nvme_rdma_qpair		*rqpair = nvme_rdma_qpair(qpair);
 	struct ibv_wc			wc[MAX_COMPLETIONS_PER_POLL];
 	int				i, rc, batch_size;

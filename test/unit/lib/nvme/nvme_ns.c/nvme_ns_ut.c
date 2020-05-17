@@ -62,7 +62,6 @@ nvme_completion_poll_cb(void *arg, const struct spdk_nvme_cpl *cpl)
 int32_t
 spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
-    printf("YESA LOG: %s, %s, 4\n", __FILE__, __func__);
 	return -1;
 }
 
