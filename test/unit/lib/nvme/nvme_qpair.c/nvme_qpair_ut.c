@@ -75,6 +75,7 @@ static int32_t g_transport_process_completions_rc = 0;
 int32_t
 nvme_transport_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
+    printf("YESA LOG: %s, %s, 1\n", __FILE__, __func__);
 	g_called_transport_process_completions = true;
 	return g_transport_process_completions_rc;
 }
