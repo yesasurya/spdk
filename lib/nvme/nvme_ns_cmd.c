@@ -1003,7 +1003,7 @@ spdk_nvme_ns_cmd_fs_open(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair,
                           0, true);
     if (req != NULL) {
         req->is_fs_request = true;
-        req->cmd.cdw10 = 1;
+        req->cmd.cdw13 = 99;
         return nvme_qpair_submit_request(qpair, req);
     } else if (spdk_nvme_ns_check_request_length(lba_count,
                                                  ns->sectors_per_max_io,
@@ -1016,7 +1016,7 @@ spdk_nvme_ns_cmd_fs_open(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair,
 }
 
 int
-spdk_nvme_ns_cmd_fs_read(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+spdk_nvme_ns_cmd_fs_read(uint32_t fd, struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
                          uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
                          void *cb_arg, uint32_t io_flags)
 {
@@ -1030,7 +1030,7 @@ spdk_nvme_ns_cmd_fs_read(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair,
                           0, true);
     if (req != NULL) {
         req->is_fs_request = true;
-        req->cmd.cdw10 = 1;
+        req->cmd.cdw13 = fd;
         return nvme_qpair_submit_request(qpair, req);
     } else if (spdk_nvme_ns_check_request_length(lba_count,
                                                  ns->sectors_per_max_io,
@@ -1043,7 +1043,7 @@ spdk_nvme_ns_cmd_fs_read(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair,
 }
 
 int
-spdk_nvme_ns_cmd_fs_write(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+spdk_nvme_ns_cmd_fs_write(uint32_t fd, struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
                           uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
                           void *cb_arg, uint32_t io_flags)
 {
@@ -1057,7 +1057,7 @@ spdk_nvme_ns_cmd_fs_write(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair
                           0, true);
     if (req != NULL) {
         req->is_fs_request = true;
-        req->cmd.cdw10 = 1;
+        req->cmd.cdw13 = fd;
         return nvme_qpair_submit_request(qpair, req);
     } else if (spdk_nvme_ns_check_request_length(lba_count,
                                                  ns->sectors_per_max_io,
