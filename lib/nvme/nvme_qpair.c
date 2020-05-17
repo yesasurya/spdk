@@ -436,6 +436,7 @@ nvme_qpair_check_enabled(struct spdk_nvme_qpair *qpair)
 int32_t
 spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
+    printf("YESA LOG: %s, %s, 2\n", __FILE__, __func__);
 	int32_t ret;
 	int32_t resubmit_rc;
 	int32_t i;

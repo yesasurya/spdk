@@ -177,6 +177,7 @@ spdk_nvme_ctrlr_process_admin_completions(struct spdk_nvme_ctrlr *ctrlr)
 int32_t
 spdk_nvme_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_completions)
 {
+    printf("YESA LOG: %s, %s, 6\n", __FILE__, __func__);
 	return -1;
 }
 
