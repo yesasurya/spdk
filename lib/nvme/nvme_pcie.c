@@ -2078,10 +2078,12 @@ nvme_pcie_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 	bool			 next_is_valid = false;
 
 	if (spdk_unlikely(nvme_qpair_is_admin_queue(qpair))) {
+        printf("YESA LOG: %s, %s, 1\n", __FILE__, __func__);
 		nvme_robust_mutex_lock(&ctrlr->ctrlr_lock);
 	}
 
 	if (max_completions == 0 || max_completions > pqpair->max_completions_cap) {
+        printf("YESA LOG: %s, %s, 2\n", __FILE__, __func__);
 		/*
 		 * max_completions == 0 means unlimited, but complete at most
 		 * max_completions_cap batch of I/O at a time so that the completion
@@ -2091,26 +2093,32 @@ nvme_pcie_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 	}
 
 	while (1) {
+        printf("YESA LOG: %s, %s, 3\n", __FILE__, __func__);
 		cpl = &pqpair->cpl[pqpair->cq_head];
 
 		if (!next_is_valid && cpl->status.p != pqpair->flags.phase) {
+            printf("YESA LOG: %s, %s, 3.1\n", __FILE__, __func__);
 			break;
 		}
 
 		if (spdk_likely(pqpair->cq_head + 1 != pqpair->num_entries)) {
+            printf("YESA LOG: %s, %s, 3.2\n", __FILE__, __func__);
 			next_cq_head = pqpair->cq_head + 1;
 			next_phase = pqpair->flags.phase;
 		} else {
+            printf("YESA LOG: %s, %s, 3.3\n", __FILE__, __func__);
 			next_cq_head = 0;
 			next_phase = !pqpair->flags.phase;
 		}
 		next_cpl = &pqpair->cpl[next_cq_head];
 		next_is_valid = (next_cpl->status.p == next_phase);
 		if (next_is_valid) {
+            printf("YESA LOG: %s, %s, 3.4\n", __FILE__, __func__);
 			__builtin_prefetch(&pqpair->tr[next_cpl->cid]);
 		}
 
 #ifdef __PPC64__
+        printf("YESA LOG: %s, %s, 3.5\n", __FILE__, __func__);
 		/*
 		 * This memory barrier prevents reordering of:
 		 * - load after store from/to tr
@@ -2118,10 +2126,12 @@ nvme_pcie_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 		 */
 		spdk_mb();
 #elif defined(__aarch64__)
+        printf("YESA LOG: %s, %s, 3.6\n", __FILE__, __func__);
 		__asm volatile("dmb oshld" ::: "memory");
 #endif
 
 		if (spdk_unlikely(++pqpair->cq_head == pqpair->num_entries)) {
+            printf("YESA LOG: %s, %s, 3.7\n", __FILE__, __func__);
 			pqpair->cq_head = 0;
 			pqpair->flags.phase = !pqpair->flags.phase;
 		}
@@ -2134,30 +2144,37 @@ nvme_pcie_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 		pqpair->sq_head = cpl->sqhd;
 
 		if (tr->req) {
+            printf("YESA LOG: %s, %s, 3.8\n", __FILE__, __func__);
 			nvme_pcie_qpair_complete_tracker(qpair, tr, cpl, true);
 		} else {
+            printf("YESA LOG: %s, %s, 3.9\n", __FILE__, __func__);
 			SPDK_ERRLOG("cpl does not map to outstanding cmd\n");
 			spdk_nvme_qpair_print_completion(qpair, cpl);
 			assert(0);
 		}
 
 		if (++num_completions == max_completions) {
+            printf("YESA LOG: %s, %s, 3.10\n", __FILE__, __func__);
 			break;
 		}
 	}
 
 	if (num_completions > 0) {
+        printf("YESA LOG: %s, %s, 4\n", __FILE__, __func__);
 		nvme_pcie_qpair_ring_cq_doorbell(qpair);
 	}
 
 	if (pqpair->flags.delay_pcie_doorbell) {
+        printf("YESA LOG: %s, %s, 5\n", __FILE__, __func__);
 		if (pqpair->last_sq_tail != pqpair->sq_tail) {
+            printf("YESA LOG: %s, %s, 5.1\n", __FILE__, __func__);
 			nvme_pcie_qpair_ring_sq_doorbell(qpair);
 			pqpair->last_sq_tail = pqpair->sq_tail;
 		}
 	}
 
 	if (spdk_unlikely(ctrlr->timeout_enabled)) {
+        printf("YESA LOG: %s, %s, 6\n", __FILE__, __func__);
 		/*
 		 * User registered for timeout callback
 		 */
@@ -2166,6 +2183,7 @@ nvme_pcie_qpair_process_completions(struct spdk_nvme_qpair *qpair, uint32_t max_
 
 	/* Before returning, complete any pending admin request. */
 	if (spdk_unlikely(nvme_qpair_is_admin_queue(qpair))) {
+        printf("YESA LOG: %s, %s, 7\n", __FILE__, __func__);
 		nvme_pcie_qpair_complete_pending_admin_request(qpair);
 
 		nvme_robust_mutex_unlock(&ctrlr->ctrlr_lock);
