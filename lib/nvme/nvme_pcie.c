@@ -1336,7 +1336,6 @@ nvme_pcie_qpair_complete_tracker(struct spdk_nvme_qpair *qpair, struct nvme_trac
 			nvme_pcie_qpair_insert_pending_admin_request(qpair, req, cpl);
 		} else {
 		    uint32_t val_cdw13 = pqpair->cmd->cdw13;
-		    printf("YESA LOG: val_cdw13 = %d\n", val_cdw13);
 			nvme_complete_request(tr->cb_fn, tr->cb_arg, qpair, req, cpl);
 		}
 
