@@ -339,6 +339,9 @@ struct nvme_request {
 	spdk_nvme_cmd_cb		user_cb_fn;
 	void				*user_cb_arg;
 	void				*user_buffer;
+
+    /* yesa: Identifying if request contains NVMe FS commands: open, write, read */
+    bool    is_fs_request;
 };
 
 struct nvme_completion_poll_status {
