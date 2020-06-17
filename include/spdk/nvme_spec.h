@@ -1321,6 +1321,9 @@ enum spdk_nvme_nvm_opcode {
     SPDK_NVME_OPC_FS_READ           = 0xfd,
     SPDK_NVME_OPC_FS_WRITE          = 0xfc,
     SPDK_NVME_OPC_FS_LSEEK          = 0xfb,
+    SPDK_NVME_OPC_FS_CREATE_FILE    = 0xfa,
+    SPDK_NVME_OPC_FS_DELETE_FILE    = 0xf9,
+    SPDK_NVME_OPC_FS_VISUALIZE      = 0xf8,
 
 	SPDK_NVME_OPC_FLUSH				= 0x00,
 	SPDK_NVME_OPC_WRITE				= 0x01,
