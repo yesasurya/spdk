@@ -738,6 +738,8 @@ enum spdk_nvme_nvm_opcode {
     SPDK_NVME_OPC_FS_CREATE_FILE    = 0xfa,
     SPDK_NVME_OPC_FS_DELETE_FILE    = 0xf9,
     SPDK_NVME_OPC_FS_VISUALIZE      = 0xf8,
+    SPDK_NVME_OPC_FS_CREATE_DIR     = 0xf7,
+    SPDK_NVME_OPC_FS_DELETE_DIR     = 0xf6,
 
 	SPDK_NVME_OPC_FLUSH				= 0x00,
 	SPDK_NVME_OPC_WRITE				= 0x01,

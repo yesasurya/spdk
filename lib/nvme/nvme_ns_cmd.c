@@ -1070,6 +1070,22 @@ spdk_nvme_ns_cmd_fs_delete_file(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair 
 }
 
 int
+spdk_nvme_ns_cmd_fs_create_directory(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+                                     uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
+                                     void *cb_arg, uint32_t io_flags)
+{
+    return spdk_nvme_ns_cmd_fs_submit(ns, qpair, buffer, lba, lba_count, cb_fn, cb_arg, io_flags, SPDK_NVME_OPC_FS_CREATE_DIR, 0);
+}
+
+int
+spdk_nvme_ns_cmd_fs_delete_directory(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+                                     uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
+                                     void *cb_arg, uint32_t io_flags)
+{
+    return spdk_nvme_ns_cmd_fs_submit(ns, qpair, buffer, lba, lba_count, cb_fn, cb_arg, io_flags, SPDK_NVME_OPC_FS_DELETE_DIR, 0);
+}
+
+int
 spdk_nvme_ns_cmd_fs_visualize(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
                               uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
                               void *cb_arg, uint32_t io_flags)
