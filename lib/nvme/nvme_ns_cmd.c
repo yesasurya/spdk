@@ -1115,7 +1115,7 @@ spdk_nvme_ns_cmd_fs_close(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair
 }
 
 int
-spdk_nvme_ns_cmd_fs_read(uint32_t fd, struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
+spdk_nvme_ns_cmd_fs_read(struct spdk_nvme_ns *ns, struct spdk_nvme_qpair *qpair, void *buffer,
                          uint64_t lba, uint32_t lba_count, spdk_nvme_cmd_cb cb_fn,
                          void *cb_arg, uint32_t io_flags, uint32_t fd)
 {
